@@ -1,0 +1,5 @@
+{
+  "name": "CRISPE Prompt Optimizer",
+  "description": "Professional AI prompt engineering tool based on CRISPE framework. Optimize prompts for Gemini, ChatGPT and Claude with bilingual support (English/Chinese).",
+  "requestFramePermissions": []
+}
