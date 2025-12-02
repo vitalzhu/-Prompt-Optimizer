@@ -3,8 +3,7 @@ import CRISPEInput from './components/CRISPEInput';
 import PromptResult from './components/PromptResult';
 import { SparklesIcon, ArrowRightIcon, LanguagesIcon } from './components/Icons';
 import { CrispeState, INITIAL_CRISPE_STATE, Language, GeneratedPrompts } from './types';
-// import { optimizePromptWithGemini } from './services/geminiService'; // Deprecated
-import { optimizePromptWithWebLLM } from './services/webLlmService';
+import { optimizePromptWithSiliconFlow } from './services/apiService';
 import { getTranslation } from './locales';
 
 const App: React.FC = () => {
@@ -36,16 +35,14 @@ const App: React.FC = () => {
     setIsGenerating(true);
     setError(null);
     setGeneratedPrompts(null);
-    setLoadingText("Initializing Engine...");
+    setLoadingText(t.optimizing);
 
     try {
-      // Use WebLLM service with progress callback
-      const result = await optimizePromptWithWebLLM(
+      // Use SiliconFlow API service
+      const result = await optimizePromptWithSiliconFlow(
         crispeData, 
-        language, 
-        (progressMessage) => {
-           setLoadingText(progressMessage);
-        }
+        language,
+        (status) => setLoadingText(status)
       );
       setGeneratedPrompts(result);
     } catch (err) {
@@ -83,8 +80,8 @@ const App: React.FC = () => {
              </button>
 
              <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 border border-slate-700">
-               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-               <span className="text-xs text-slate-400 font-medium">Qwen 1.5B (Local)</span>
+               <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+               <span className="text-xs text-slate-400 font-medium">DeepSeek V3 (Cloud)</span>
              </div>
           </div>
         </div>
@@ -151,7 +148,6 @@ const App: React.FC = () => {
           <div className="lg:col-span-7 flex flex-col lg:h-full lg:min-h-0 min-h-[500px]">
             <div className="h-full bg-slate-800/50 rounded-xl border border-slate-700/50 p-1 shadow-xl backdrop-blur-sm flex flex-col">
               <div className="flex-1 bg-slate-900/50 rounded-lg p-6 border border-slate-800 flex flex-col min-h-0">
-                {/* Pass loadingText to display progress bar/text */}
                 <PromptResult 
                     prompt={generatedPrompts} 
                     isLoading={isGenerating} 
